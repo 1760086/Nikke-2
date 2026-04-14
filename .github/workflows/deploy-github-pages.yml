@@ -26,6 +26,7 @@ jobs:
           node-version: '20'
           cache: npm
       - run: npm ci
+      # GITHUB_REPOSITORY is set by Actions → vite resolveBase() → /repo-name/ for project pages
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -4,10 +4,31 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 
+/** GitHub Pages project site: https://user.github.io/repo-name/ → base must be /repo-name/ */
+function normalizeBasePath(p: string): string {
+  let b = p.trim()
+  if (!b || b === '/') return '/'
+  if (!b.startsWith('/')) b = `/${b}`
+  if (!b.endsWith('/')) b += '/'
+  return b
+}
+
+function resolveBase(): string {
+  if (process.env.VITE_BASE_PATH) {
+    return normalizeBasePath(process.env.VITE_BASE_PATH)
+  }
+  const repo = process.env.GITHUB_REPOSITORY?.split('/')[1]
+  if (repo) {
+    if (repo.endsWith('.github.io')) return '/'
+    return `/${repo}/`
+  }
+  return '/'
+}
+
 // https://vitejs.dev/config/
-// GitHub Pages: deploy the output of `npm run build` (folder `dist/`), not the repo root `index.html`.
-// Project site at username.github.io/repo-name/ needs `base: '/repo-name/'` here (see Vite docs).
+// GitHub Pages: deploy folder `dist/`. Project sites need a non-root base (see resolveBase).
 export default defineConfig({
+  base: resolveBase(),
   plugins: [vue(), vueJsx()],
   resolve: {
     alias: {
