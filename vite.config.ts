@@ -5,6 +5,8 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 
 // https://vitejs.dev/config/
+// GitHub Pages: deploy the output of `npm run build` (folder `dist/`), not the repo root `index.html`.
+// Project site at username.github.io/repo-name/ needs `base: '/repo-name/'` here (see Vite docs).
 export default defineConfig({
   plugins: [vue(), vueJsx()],
   resolve: {
